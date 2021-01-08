@@ -4,7 +4,8 @@ CFLAGS=-g
 BUILD_DIR := ./build
 
 OBJS = $(BUILD_DIR)/parser.o \
-	$(BUILD_DIR)/shell.o
+	$(BUILD_DIR)/shell.o \
+	$(BUILD_DIR)/builtin.o
 
 all: check tsh
 
@@ -19,6 +20,9 @@ $(BUILD_DIR)/parser.o : parser.c
 	
 $(BUILD_DIR)/shell.o: shell.c
 	$(CC) -c $(CFLAGS) shell.c -o $(BUILD_DIR)/shell.o
+	
+$(BUILD_DIR)/builtin.o: builtin.c
+	$(CC) -c $(CFLAGS) builtin.c -o $(BUILD_DIR)/builtin.o
 	
 clean:
 	rm -vr ./build

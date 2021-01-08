@@ -1,3 +1,8 @@
+
+// shell.c
+// The main entry point of our shell. Here, we get input, build the
+// command, and execute them.
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -8,47 +13,7 @@
 #include <sys/wait.h>
 
 #include "parser.h"
-
-void run_cd(char *input, int size)
-{
-    char *cd_path = (char *)malloc(sizeof(char)*100);
-    int found = 0;
-    int pos = 0;
-    int is_env = 0;
-    
-    for (int i = 0; i<size; i++)
-    {
-        if (input[i] == ' ' && !found)
-        {
-            found = 1;
-        }
-        else if (found)
-        {
-            if (input[i] == '$') {
-                is_env = 1;
-                continue;
-            }
-            
-            cd_path[pos] = input[i];
-            ++pos;
-        }
-    }
-    
-    cd_path[pos] = 0;
-    
-    if (is_env)
-    {
-        check_env(cd_path);
-    }
-    
-    if (chdir(cd_path) == -1)
-    {
-        printf("Unknown path\n");
-        return;
-    }
-    
-    free(cd_path);
-}
+#include "builtin.h"
 
 void run(char *cmd, char **args)
 {

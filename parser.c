@@ -1,20 +1,16 @@
+
+// parser.c
+// This handles command parsing. The first two functions are in charge of
+// building the arguments list. The functions afterward are in charge of
+// building the command (basically, searching the PATH and making sure its a valid
+// command).
+
 #include <stdlib.h>
 #include <string.h>
 #include <stdint.h>
-
 #include <unistd.h>
 
-// Checks an environment variable
-size_t check_env(char *buf)
-{
-    char *env = getenv(buf);
-    size_t len = strlen(env);
-    
-    for (int i = 0; i<strlen(buf); i++)
-        buf[i] = 0;
-    
-    strcpy(buf, env);
-}
+#include "builtin.h"
 
 // Parse out the arguments
 size_t get_arg_count(char *input, size_t size)
