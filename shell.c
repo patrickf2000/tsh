@@ -50,6 +50,11 @@ void execute_command(char *input, int size)
         
         free(cmd);
         return;
+    } else if (strcmp(cmd, "set") == 0) {
+        run_set(input, size);
+        
+        free(cmd);
+        return;
     }
     
     // Otherwise, check the system

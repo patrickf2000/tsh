@@ -13,6 +13,11 @@
 size_t check_env(char *buf)
 {
     char *env = getenv(buf);
+    
+    if (env == NULL) {
+        return strlen(buf);
+    }
+    
     size_t len = strlen(env);
     
     for (int i = 0; i<strlen(buf); i++)
@@ -61,5 +66,41 @@ void run_cd(char *input, int size)
     }
     
     free(cd_path);
+}
+
+// Run the SET built-in (sets environment variables)
+void run_set(char *input, int size)
+{
+    int len = size - 4;
+    char var_name[len];
+    char var_value[len];
+    
+    int in_value = 0;
+    int pos = 0;
+    
+    for (int i = 4; i<size; i++)
+    {
+        if (input[i] == '=' && !in_value)
+        {
+            in_value = 1;
+            
+            var_name[pos] = 0;
+            pos = 0;
+        }
+        else if (in_value)
+        {
+            var_value[pos] = input[i];
+            ++pos;
+        }
+        else
+        {
+            var_name[pos] = input[i];
+            ++pos;
+        }
+    }
+    
+    var_value[pos] = 0;
+    
+    setenv(var_name, var_value, 1);
 }
 
