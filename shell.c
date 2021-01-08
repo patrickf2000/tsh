@@ -141,7 +141,7 @@ void get_line(char *input, int size)
     do {
         c = getchar();
         
-        if ((unsigned char)c == 27) {
+        if ((unsigned char)c == 27) {       // Detect special keys
             char c1 = c;
             char c2 = getchar();
             c = getchar();
@@ -158,6 +158,10 @@ void get_line(char *input, int size)
                 putchar(c1);
                 putchar(c2);
             }
+        } else if ((unsigned char)c == 127) {       // Detect backspace
+            printf("\b \b");
+            --pos;
+            input[pos] = 0;
         } else if (c == 0 || c == '\n') {
             putchar('\n');
             break;
