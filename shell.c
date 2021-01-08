@@ -9,6 +9,36 @@
 
 #include "parser.h"
 
+void run_cd(char *input, int size)
+{
+    char *cd_path = (char *)malloc(sizeof(char)*100);
+    int found = 0;
+    int pos = 0;
+    
+    for (int i = 0; i<size; i++)
+    {
+        if (input[i] == ' ' && !found)
+        {
+            found = 1;
+        }
+        else if (found)
+        {
+            cd_path[pos] = input[i];
+            ++pos;
+        }
+    }
+    
+    cd_path[pos] = 0;
+    
+    if (chdir(cd_path) == -1)
+    {
+        printf("Unknown path\n");
+        return;
+    }
+    
+    free(cd_path);
+}
+
 void run(char *cmd, char **args)
 {
     pid_t pid = fork();
@@ -36,18 +66,29 @@ void run(char *cmd, char **args)
 
 void execute_command(char *input, int size)
 {
+    // Check built-ins
     char *cmd = get_command(input, size);
+    
+    if (strcmp(cmd, "cd") == 0) {
+        run_cd(input, size);
+        
+        free(cmd);
+        return;
+    }
+    
+    // Otherwise, check the system
     char *full_cmd = get_full_command(cmd);
     
     if (full_cmd == NULL)
     {
+        printf("Unknown command.\n");
+        
         free(cmd);
         free(full_cmd);
-        
-        printf("Unknown command.\n");
         return;
     }
     
+    // Get arguments list and run
     size_t arg_count = get_arg_count(input, size);
     char **args = get_args(input, size, arg_count);
     
