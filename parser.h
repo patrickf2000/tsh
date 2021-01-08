@@ -2,6 +2,7 @@
 
 #include <stdint.h>
 
+size_t check_env(char *buf);
 size_t get_arg_count(char *input, size_t size);
 char **get_args(char *input, size_t size, size_t arg_count);
 char *get_command(char *input, size_t size);

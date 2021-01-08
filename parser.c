@@ -4,6 +4,18 @@
 
 #include <unistd.h>
 
+// Checks an environment variable
+size_t check_env(char *buf)
+{
+    char *env = getenv(buf);
+    size_t len = strlen(env);
+    
+    for (int i = 0; i<strlen(buf); i++)
+        buf[i] = 0;
+    
+    strcpy(buf, env);
+}
+
 // Parse out the arguments
 size_t get_arg_count(char *input, size_t size)
 {
@@ -25,10 +37,16 @@ char **get_args(char *input, size_t size, size_t arg_count)
     
     int arg_pos = 0;
     int buf_pos = 0;
+    int is_env = 0;
     char *buf = (char *)malloc(sizeof(char) * 100);
     
     for (int i = 0; i<size; i++) {
         if (input[i] == ' ') {
+            if (is_env == 1) {
+                buf_pos = check_env(buf);
+                is_env = 0;
+            }
+            
             buf_pos += 1;
             args[arg_pos] = (char *)malloc(sizeof(char) * buf_pos);
             strncpy(args[arg_pos], buf, buf_pos);
@@ -40,9 +58,18 @@ char **get_args(char *input, size_t size, size_t arg_count)
             buf_pos = 0;
             arg_pos += 1;
         } else {
+            if (buf_pos == 0 && input[i] == '$') {
+                is_env = 1;
+                continue;
+            }
+            
             buf[buf_pos] = input[i];
             ++buf_pos;
         }
+    }
+    
+    if (is_env == 1) {
+        check_env(buf);
     }
     
     buf_pos += 1;
