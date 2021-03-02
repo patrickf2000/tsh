@@ -7,7 +7,7 @@ TSH features:
 * Run commands (arguments obviously supported)
 * Command-line editing (backspace detection and functionality)
 * Environment variable parsing
-* Set environment variables (unset command)
+* Set environment variables (set command)
 * Environment navigation (cd command)
 
 ### Feature Work
